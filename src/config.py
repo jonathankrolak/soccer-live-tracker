@@ -21,3 +21,11 @@ YELLOW = (0, 255, 255)
 RED = (0, 0, 255)
 WHITE = (255, 255, 255)
 GREEN_FIELD = (40, 130, 40)
+
+PITCH_GREEN_THRESHOLD = 55
+PITCH_SAMPLE_RADIUS = 22
+
+# Optional rough vertical bounds.
+# Helps ignore crowd/scoreboard/upper stands.
+PITCH_MIN_Y_RATIO = 0.20
+PITCH_MAX_Y_RATIO = 0.99

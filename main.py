@@ -4,6 +4,7 @@ import cv2
 import mss
 import numpy as np
 from ultralytics import YOLO
+from src.pitch_filter import is_on_pitch
 
 from src.color_classifier import get_jersey_color
 from src.config import (
@@ -88,6 +89,20 @@ def main():
                     # Bottom-center point of player box = estimated feet position
                     player_screen_x = int((x1 + x2) / 2)
                     player_screen_y = int(y2)
+
+                    # Ignore detections whose feet are not on the pitch.
+                    if not is_on_pitch(frame, player_screen_x, player_screen_y):
+                        cv2.circle(frame, (player_screen_x, player_screen_y), 5, (0, 0, 0), -1)
+                        cv2.putText(
+                            frame,
+                            "off pitch",
+                            (x1, y2 + 18),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            0.45,
+                            (0, 0, 0),
+                            2,
+                        )
+                        continue
 
                     # Red dot on broadcast shows the point we map to the field
                     cv2.circle(frame, (player_screen_x, player_screen_y), 5, RED, -1)
