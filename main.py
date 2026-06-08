@@ -5,6 +5,8 @@ import mss
 import numpy as np
 from ultralytics import YOLO
 from src.pitch_filter import is_on_pitch
+import json
+import os
 
 from src.color_classifier import get_jersey_color
 from src.config import (
@@ -22,18 +24,26 @@ from src.field_view import draw_field
 from src.mapper import map_screen_to_field
 from src.smoothing import smooth_positions
 
+def load_crop_config():
+    config_path = "crop_config.json"
+
+    if os.path.exists(config_path):
+        with open(config_path, "r") as file:
+            return json.load(file)
+
+    return {
+        "top": CROP_TOP,
+        "left": CROP_LEFT,
+        "width": CROP_WIDTH,
+        "height": CROP_HEIGHT,
+    }
 
 def main():
     model = YOLO("yolov8n.pt")
     previous_player_positions = []
 
     with mss.mss() as sct:
-        monitor = {
-            "top": CROP_TOP,
-            "left": CROP_LEFT,
-            "width": CROP_WIDTH,
-            "height": CROP_HEIGHT,
-        }
+        monitor = load_crop_config()
 
         screen_width = monitor["width"]
         screen_height = monitor["height"]
