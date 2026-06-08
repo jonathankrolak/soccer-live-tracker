@@ -4,6 +4,8 @@ import os
 import cv2
 import mss
 import numpy as np
+from src.config import CAPTURE_MONITOR_INDEX, DISPLAY_MONITOR_INDEX
+from src.window_utils import move_window_to_monitor
 
 
 CONFIG_PATH = "crop_config.json"
@@ -192,10 +194,12 @@ def main():
     crop = load_crop()
 
     with mss.mss() as sct:
-        monitor = sct.monitors[0]
+        monitor = sct.monitors[CAPTURE_MONITOR_INDEX]
 
         cv2.namedWindow(WINDOW_NAME)
         cv2.setMouseCallback(WINDOW_NAME, mouse_callback)
+
+        move_window_to_monitor(sct, WINDOW_NAME, DISPLAY_MONITOR_INDEX, 40, 40)
 
         while True:
             screenshot = sct.grab(monitor)
