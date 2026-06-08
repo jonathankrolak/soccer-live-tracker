@@ -29,3 +29,5 @@ PITCH_SAMPLE_RADIUS = 22
 # Helps ignore crowd/scoreboard/upper stands.
 PITCH_MIN_Y_RATIO = 0.20
 PITCH_MAX_Y_RATIO = 0.99
+
+SHOW_DEBUG_LABELS = True

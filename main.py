@@ -16,6 +16,7 @@ from src.config import (
     RED,
     YOLO_IMAGE_SIZE,
     YELLOW,
+    SHOW_DEBUG_LABELS,
 )
 from src.field_view import draw_field
 from src.mapper import map_screen_to_field
@@ -75,16 +76,18 @@ def main():
                     # Draw player box on broadcast
                     cv2.rectangle(frame, (x1, y1), (x2, y2), dot_color, 2)
 
-                    # Label detected team color
-                    cv2.putText(
-                        frame,
-                        team_label,
-                        (x1, y1 - 8),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        0.45,
-                        dot_color,
-                        2,
-                    )
+                    if SHOW_DEBUG_LABELS:
+                        # Label detected team color
+                        cv2.putText(
+                            frame,
+                            team_label,
+                            (x1, y1 - 8),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            0.45,
+                            dot_color,
+                            2,
+                        )
+                    
 
                     # Bottom-center point of player box = estimated feet position
                     player_screen_x = int((x1 + x2) / 2)
@@ -114,7 +117,7 @@ def main():
                         screen_height,
                     )
 
-                    current_player_positions.append((field_x, field_y, dot_color))
+                    current_player_positions.append((field_x, field_y, dot_color, team_label))
 
             smoothed_player_positions = smooth_positions(
                 previous_player_positions,
@@ -130,25 +133,27 @@ def main():
             fps = 1 / (current_time - prev_time)
             prev_time = current_time
 
-            cv2.putText(
-                frame,
-                f"FPS: {fps:.1f}",
-                (20, 40),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                YELLOW,
-                2,
-            )
+            if SHOW_DEBUG_LABELS:
+                cv2.putText(
+                    frame,
+                    f"FPS: {fps:.1f}",
+                    (20, 40),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    YELLOW,
+                    2,
+                )
 
-            cv2.putText(
-                frame,
-                f"Chelsea: {light_blue_count}  Man Utd: {dark_blue_count}  Unknown: {unknown_count}",
-                (20, 75),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.8,
-                YELLOW,
-                2,
-            )
+            if SHOW_DEBUG_LABELS:
+                cv2.putText(
+                    frame,
+                    f"Chelsea: {light_blue_count}  Man Utd: {dark_blue_count}  Unknown: {unknown_count}",
+                    (20, 75),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.8,
+                    YELLOW,
+                    2,
+                )
 
             cv2.imshow("Broadcast Detection", frame)
             cv2.imshow("Top Down Field", field_view)

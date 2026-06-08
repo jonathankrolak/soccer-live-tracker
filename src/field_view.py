@@ -69,7 +69,7 @@ def draw_field(player_positions):
     )
 
     # Players
-    for x, y, color in player_positions:
+    for x, y, color, team_label in player_positions:
         cv2.circle(field, (int(x), int(y)), 9, color, -1)
         cv2.circle(field, (int(x), int(y)), 9, WHITE, 1)
 

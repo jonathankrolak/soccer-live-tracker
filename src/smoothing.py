@@ -33,10 +33,22 @@ def smooth_positions(previous_positions, current_positions):
             smooth_x = previous[0] * SMOOTHING + current[0] * (1 - SMOOTHING)
             smooth_y = previous[1] * SMOOTHING + current[1] * (1 - SMOOTHING)
 
-            # Keep newest detected color
-            color = current[2]
+            current_color = current[2]
+            current_label = current[3]
 
-            smoothed_positions.append((smooth_x, smooth_y, color))
+            previous_color = previous[2]
+            previous_label = previous[3]
+
+            # If the current frame is unsure, keep the last known team.
+            # This prevents Chelsea players from flickering blue/unknown.
+            if current_label == "unknown" and previous_label != "unknown":
+                color = previous_color
+                label = previous_label
+            else:
+                color = current_color
+                label = current_label
+
+            smoothed_positions.append((smooth_x, smooth_y, color, label))
         else:
             smoothed_positions.append(current)
 
